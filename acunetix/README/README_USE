@@ -1,0 +1,35 @@
+
+
+## Use
+
+```bash
+docker run -it -d \
+--name awvs \
+-p 3443:3443 \
+--restart=always \
+xrsec/awvs
+# xrsec/awvs:v15
+# xrsec/awvs:v14
+```
+
+### Edit HOSTS
+
+```bash
+sudo vi /etc/hosts
+192.168.0.1 awvs.lan
+```
+
+### RootCA 「must」
+
+Downlaod && Install [`RootCA.cer`](https://cdn.jsdelivr.net/gh/XRSec/AWVS-Update@main/.github/resources/ca.cer)
+
+### Visit Web
+
+```ini
+URL: https://awvs.lan:3443/#/login
+UserName: awvs@awvs.lan
+PassWord: Awvs@awvs.lan
+```
+
+<hr>
+
