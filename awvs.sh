@@ -10,7 +10,7 @@ echo -e "\033[1;34m  ------------------------------------------------- \033[0m"
 echo -e "\033[1;31m  Thank's fahai && Open Source Enthusiast \n\033[0m"
 
 echo -e "\033[1;32m  [ help ] \033[0m"
-echo -e "\033[1;33m  [ https://www.fahai.org/index.php/archives/146/ ] \033[0m"
+echo -e "\033[1;33m  [ https://www.fahai.org ] \033[0m"
 echo -e "\033[1;33m  [ https://github.com/XRSec/AWVS-Update ] \033[0m"
 echo -e "\033[1;33m  [ https://awvs.vercel.app/ ] \n\033[0m"
 
