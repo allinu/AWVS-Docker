@@ -1,0 +1,159 @@
+name: AWVS Docker Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      PACKAGE_URL:
+        description: 'AWVS INSTALLATION PACKAGE'
+        required: true
+        default: "old"
+      PACKAGE_VERSION:
+        description: 'AWVS PACKAGE VERSION'
+        required: true
+        default: "old"
+  watch:
+    types: started
+
+jobs:
+  AWVS_Docker_Build:
+    name: AWVS Docker Build
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        name: Private Actions Checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.18.0-rc.1'
+      -
+        name: Update Readme
+        if: github.event.inputs.PACKAGE_VERSION != 'old'
+        id: update
+        run: |
+          # apt-get install coreutils
+          cd acunetix/README
+          md5_now="$(md5sum ../../README.md)"
+          go run main.go -v "${{ github.event.inputs.PACKAGE_VERSION }}"
+          if [ "$md5_now" != "$(md5sum ../../README.md)" ]; then
+            echo "status=false" >> $GITHUB_OUTPUT
+          else
+            echo "status=true" >> $GITHUB_OUTPUT
+          fi
+          cd ../../
+      - 
+        name: Upload AWVS INSTALLATION PACKAGE
+        if: github.event.inputs.PACKAGE_URL != 'old'
+        run: |
+          cd acunetix/AWVS_INSTALLATION_PACKAGE || exit 1
+          curl -Lko awvs_x86.sh "${{ github.event.inputs.PACKAGE_URL }}" || exit 1
+          split -b 50m awvs_x86.sh
+      - 
+        name: Update AWVS
+        if: github.event.inputs.PACKAGE_URL != 'old' || steps.update.outputs.status == 'false'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add --all -- ':!acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh'
+          git commit -m "Add changes by Awvs_Update_Action" -a
+          git push
+      - 
+        name: Docker Setup QEMU
+        uses: docker/setup-qemu-action@v1
+      - 
+        name: Docker Setup Buildx
+        uses: docker/setup-buildx-action@v1
+      - 
+        name: Docker Login in Aliyun
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}
+          username: ${{ secrets.DOCKERHUB_ACCOUNT_ALIYUN }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD_ALIYUN }}
+      - 
+        name: Docker Login
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - 
+        name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.TOKEN_GITHUB }}
+      - 
+        name: Build and push Docker images
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          # platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v14
+            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v14
+            ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v14
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v14.cache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v14.cache,mode=max
+      # -
+      #   name: Scan for vulnerabilities
+      #   uses: crazy-max/ghaction-container-scan@v1
+      #   with:
+      #     image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
+      #     dockerfile: Dockerfile
+      #   env:
+      #     TRIVY_TIMEOUT: 20m
+      -
+        name: Get Data 
+        id: getDingData
+        run: |
+          set -ex
+          # 输出仓库名
+          REPOSITORY="${{GITHUB.REPOSITORY}}"
+          echo "REPOSITORY=${REPOSITORY#*/}" >> $GITHUB_OUTPUT
+
+          # 获取用户仓库信息
+          # RESPONSE="$(curl -sLm 10 https://api.github.com/repos/${{ GITHUB.REPOSITORY }})"
+          # 建议填写自己的 TOKEN
+          RESPONSE="$(curl -sLm 10 https://api.github.com/repos/${{ GITHUB.REPOSITORY }} -H "Authorization: token ${{ SECRETS.TOKEN_GITHUB }}")"
+          
+          # 获取 用户仓库 设置的 描述，如果为空，可能是没有使用 TOKEN
+          DESCRIPTION="$(jq -r .description <(echo ${RESPONSE}))"
+          echo "DESCRIPTION=${DESCRIPTION}" >> $GITHUB_OUTPUT
+
+          # 获取 用户仓库 设置的 URL, 如果没有就输出 Github 地址
+          URL="$(jq -r .homepage <(echo ${RESPONSE}))"
+          if [[ "${URL}" == "null" || "${URL}" == "" ]]; then
+            echo "URL=${{ GITHUB.SERVER_URL }}/${{ GITHUB.REPOSITORY }}" >> $GITHUB_OUTPUT
+          else
+            echo "URL=${URL}" >> $GITHUB_OUTPUT
+          fi
+      - 
+        name: Send dingding notify
+        uses: zcong1993/actions-ding@master
+        with:
+          dingToken: ${{ SECRETS.DING_TOKEN }}
+          secret: ${{ SECRETS.DING_SECRET }}
+          body: |
+            {
+              "msgtype": "link",
+              "link": {
+                  "text": "${{ steps.getDingData.outputs.DESCRIPTION }}",
+                  "title":  "${{ steps.getDingData.outputs.REPOSITORY }} WorkFlow ${{ GITHUB.JOB }} Success!",
+                  "picUrl": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+                  "messageUrl": "${{ steps.getDingData.outputs.URL }}"
+              }
+            }
+
+  Repository_Dispatch:
+    needs: AWVS_Docker_Build
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.TOKEN_GITHUB }}
+          repository: ${{ github.repository_owner }}/AWVS-Update
+          event-type: Awvs_Update_Action
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
