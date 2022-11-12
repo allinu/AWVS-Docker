@@ -41,6 +41,16 @@ jobs:
           fi
           cd ../../
       -
+        name: Update version tag
+        if: github.event.inputs.PACKAGE_VERSION == 'old'
+        id: update_tag
+        run: |
+          VERSION="$((cat acunetix/README/LAST_VERSION | sed 's/ //g') 2>/dev/null)"
+          if [[ -z "{$VERSION}" ]]; then
+            echo "获取老版本失败: ${VERSION}"
+          fi
+          echo "dir=${VERSION}" >> $GITHUB_OUTPUT
+      -
         name: Upload AWVS INSTALLATION PACKAGE
         if: github.event.inputs.PACKAGE_URL != 'old'
         run: |
@@ -90,14 +100,14 @@ jobs:
           # platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v15
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
-            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v15
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:{{ steps.update_tag.outputs.dir }}
             ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
-            ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v15
+            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:{{ steps.update_tag.outputs.dir }}
             ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v15.cache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v15.cache,mode=max
+            ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:{{ steps.update_tag.outputs.dir }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:cache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:cache,mode=max
       # -
       #   name: Scan for vulnerabilities
       #   uses: crazy-max/ghaction-container-scan@v1
