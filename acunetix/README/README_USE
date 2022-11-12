@@ -8,8 +8,8 @@ docker run -it -d \
 -p 3443:3443 \
 --restart=always \
 xrsec/awvs
-# xrsec/awvs:v15
-# xrsec/awvs:v14
+# example xrsec/awvs:{{tags}} # https://hub.docker.com/r/xrsec/awvs/tags
+# xrsec/awvs:v15.1
 ```
 
 ### Edit HOSTS
