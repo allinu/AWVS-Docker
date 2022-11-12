@@ -7,7 +7,6 @@ import (
 	"github.com/anaskhan96/soup"
 	"io/ioutil"
 	"os"
-	"regexp"
 	"strings"
 )
 
@@ -77,17 +76,16 @@ func genContent(version string) {
 	}
 
 	doc := soup.HTMLParse(string(bytes))
-	resV1 := doc.FindAll("article")
+	resV1 := doc.FindAll("div", "class", "article-content")
 
 	for i := 0; i < len(resV1); i++ {
-		title := getTitle(resV1[i].Find("div", "class", "article-summary").Text())
-		if strings.Contains(title, version) {
+		if title := resV1[i].Find("span", "class", "version").Text(); title == version {
+			title = "<h2>" + title + "</h2>"
 			latest = title + resV1[i].Find("div", "class", "article-full-content").HTML()
 			if i+1 < len(resV1) {
-				var re = regexp.MustCompile(`(\d{1,6})\.(\d{1,6})\.(\d{1,10})`)
-				oldTitle := getTitle(resV1[i+1].Find("div", "class", "article-summary").Text())
-				if len(re.FindStringIndex(oldTitle)) > 0 {
-					oldTitle = re.FindString(oldTitle)
+				oldTitle := resV1[i+1].Find("span", "class", "version").Text()
+				if oldTitle == "" {
+					fmt.Printf("未找到老版本号: %v", oldTitle)
 				}
 				oldTitle = "<h2>Previous " + oldTitle + "</h2>"
 				last = oldTitle + resV1[i+1].Find("div", "class", "article-full-content").HTML()
@@ -95,14 +93,6 @@ func genContent(version string) {
 			break
 		}
 	}
-}
-
-func getTitle(title string) string {
-	title = strings.Replace(title, "\n", "", -1)
-	title = strings.ReplaceAll(title, "\t", "")
-	title = strings.ReplaceAll(title, "  ", "")
-	title = "<h2>" + title + "</h2>"
-	return title
 }
 
 func readFile(filename string) string {
