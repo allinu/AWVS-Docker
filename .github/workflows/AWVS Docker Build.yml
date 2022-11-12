@@ -101,11 +101,11 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:{{ steps.update_tag.outputs.dir }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:${{ steps.update_tag.outputs.dir }}
             ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
-            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:{{ steps.update_tag.outputs.dir }}
+            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:${{ steps.update_tag.outputs.dir }}
             ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
-            ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:{{ steps.update_tag.outputs.dir }}
+            ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:${{ steps.update_tag.outputs.dir }}
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:cache
           cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:cache,mode=max
       # -
