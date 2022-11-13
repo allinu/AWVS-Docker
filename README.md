@@ -9,7 +9,7 @@
 
 [![Star History Chart](https://api.star-history.com/svg?repos=XRSec/AWVS-Update&type=Date)](https://star-history.com/#XRSec/AWVS-Update&Date)
 
-## Version 14 build 14.8.220610146 for Linux (only) – 13th June 2022
+## 14.8.220610146
 
 ### Fixes
 

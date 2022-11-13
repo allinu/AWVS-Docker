@@ -19,7 +19,7 @@ jobs:
     name: AWVS Docker Build
     runs-on: ubuntu-latest
     steps:
-      - 
+      -
         name: Private Actions Checkout
         uses: actions/checkout@v3
       - uses: actions/setup-go@v3
@@ -40,14 +40,24 @@ jobs:
             echo "status=true" >> $GITHUB_OUTPUT
           fi
           cd ../../
-      - 
+      -
+        name: Update version tag
+        if: github.event.inputs.PACKAGE_VERSION == 'old'
+        id: update_tag
+        run: |
+          VERSION="$((cat acunetix/README/LAST_VERSION | sed 's/ //g') 2>/dev/null)"
+          if [[ -z "{$VERSION}" ]]; then
+            echo "获取老版本失败: ${VERSION}"
+          fi
+          echo "dir=${VERSION}" >> $GITHUB_OUTPUT
+      -
         name: Upload AWVS INSTALLATION PACKAGE
         if: github.event.inputs.PACKAGE_URL != 'old'
         run: |
           cd acunetix/AWVS_INSTALLATION_PACKAGE || exit 1
           curl -Lko awvs_x86.sh "${{ github.event.inputs.PACKAGE_URL }}" || exit 1
           split -b 50m awvs_x86.sh
-      - 
+      -
         name: Update AWVS
         if: github.event.inputs.PACKAGE_URL != 'old' || steps.update.outputs.status == 'false'
         run: |
@@ -56,33 +66,33 @@ jobs:
           git add --all -- ':!acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh'
           git commit -m "Add changes by Awvs_Update_Action" -a
           git push
-      - 
+      -
         name: Docker Setup QEMU
         uses: docker/setup-qemu-action@v1
-      - 
+      -
         name: Docker Setup Buildx
         uses: docker/setup-buildx-action@v1
-      - 
+      -
         name: Docker Login in Aliyun
         uses: docker/login-action@v1
         with:
           registry: ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}
           username: ${{ secrets.DOCKERHUB_ACCOUNT_ALIYUN }}
           password: ${{ secrets.DOCKERHUB_PASSWORD_ALIYUN }}
-      - 
+      -
         name: Docker Login
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - 
+      -
         name: Log in to the Container registry
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.TOKEN_GITHUB }}
-      - 
+      -
         name: Build and push Docker images
         uses: docker/build-push-action@v2
         with:
@@ -90,11 +100,14 @@ jobs:
           # platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v14
-            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v14
-            ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v14
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v14.cache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v14.cache,mode=max
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:${{ steps.update_tag.outputs.dir }}
+            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
+            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:${{ steps.update_tag.outputs.dir }}
+            ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
+            ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:${{ steps.update_tag.outputs.dir }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:cache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:cache,mode=max
       # -
       #   name: Scan for vulnerabilities
       #   uses: crazy-max/ghaction-container-scan@v1
@@ -104,7 +117,7 @@ jobs:
       #   env:
       #     TRIVY_TIMEOUT: 20m
       -
-        name: Get Data 
+        name: Get Data
         id: getDingData
         run: |
           set -ex
@@ -128,7 +141,7 @@ jobs:
           else
             echo "URL=${URL}" >> $GITHUB_OUTPUT
           fi
-      - 
+      -
         name: Send dingding notify
         uses: zcong1993/actions-ding@master
         with:
@@ -149,7 +162,7 @@ jobs:
     needs: AWVS_Docker_Build
     runs-on: ubuntu-latest
     steps:
-      - 
+      -
         name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
         with:

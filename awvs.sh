@@ -5,7 +5,8 @@ echo -e "\033[1;32m     /   | |     / / |  / / ___/ \033[0m"
 echo -e "\033[1;33m    / /| | | /| / /| | / /\__ \\  \033[0m"
 echo -e "\033[1;34m   / ___ | |/ |/ / | |/ /___/ /  \033[0m"
 echo -e "\033[1;35m  /_/  |_|__/|__/  |___//____/   \033[0m"
-echo -e "\n\033[1;36m  [ Version: latest ] \033[0m"
+# shellcheck disable=SC2002
+echo -e "\n\033[1;36m  [ Version: $(cat acunetix/README/LAST_VERSION | sed 's/ //g' 2>/dev/null) ] \033[0m"
 echo -e "\033[1;34m  ------------------------------------------------- \033[0m"                           
 echo -e "\033[1;31m  Thank's fahai && Open Source Enthusiast \n\033[0m"
 
