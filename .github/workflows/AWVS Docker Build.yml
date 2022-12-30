@@ -13,7 +13,8 @@ on:
         default: "old"
   watch:
     types: started
-
+env:
+  PACKAGE_VERSION: ${{ github.event.inputs.PACKAGE_VERSION }}
 jobs:
   AWVS_Docker_Build:
     name: AWVS Docker Build
