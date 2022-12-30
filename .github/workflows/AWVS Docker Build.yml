@@ -49,7 +49,7 @@ jobs:
           if [[ -z "{$VERSION}" ]]; then
             echo "获取老版本失败: ${VERSION}"
           fi
-          echo "dir=${VERSION}" >> $GITHUB_OUTPUT
+          echo "PACKAGE_VERSION=${VERSION}" >> $GITHUB_ENV
       -
         name: Upload AWVS INSTALLATION PACKAGE
         if: github.event.inputs.PACKAGE_URL != 'old'
@@ -103,15 +103,15 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:15
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v15
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
-            # ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:${{ steps.update_tag.outputs.dir }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:${{ PACKAGE_VERSION }}
             ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:15
             ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v15
-            # ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
-            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:${{ steps.update_tag.outputs.dir }}
+            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
+            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:${{ PACKAGE_VERSION }}
             ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:15
             ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:v15
             ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
-            # ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:${{ steps.update_tag.outputs.dir }}
+            ${{ secrets.DOCKERHUB_REGISTRY_ALIYUN }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:${{ PACKAGE_VERSION }}
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:cache
           cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:cache,mode=max
       # -
