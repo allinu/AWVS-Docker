@@ -80,7 +80,7 @@ func genContent(version string) {
 
 	for i := 0; i < len(resV1); i++ {
 		if title := resV1[i].Find("span", "class", "version").Text(); title == version {
-			title = "<h2>" + title + "</h2>"
+			title = "<h2> Latest" + title + "</h2>"
 			latest = title + resV1[i].Find("div", "class", "article-full-content").HTML()
 			if i+1 < len(resV1) {
 				oldTitle := resV1[i+1].Find("span", "class", "version").Text()
