@@ -46,9 +46,13 @@ func main() {
 
 	latest = htmltomd.Convert(latest, "", false)
 
+	latest = strings.ReplaceAll(latest, "# ", "## ")
+
 	use := readFile("README_USE")
 
 	last = htmltomd.Convert(last, "", false)
+
+	last = strings.ReplaceAll(last, "# ", "## ")
 
 	footer := readFile("README_FOOTER")
 
@@ -80,14 +84,14 @@ func genContent(version string) {
 
 	for i := 0; i < len(resV1); i++ {
 		if title := resV1[i].Find("span", "class", "version").Text(); title == version {
-			title = "<h2> Latest" + title + "</h2>"
+			title = "<h1> Latest " + title + "</h1>"
 			latest = title + resV1[i].Find("div", "class", "article-full-content").HTML()
 			if i+1 < len(resV1) {
 				oldTitle := resV1[i+1].Find("span", "class", "version").Text()
 				if oldTitle == "" {
 					fmt.Printf("未找到老版本号: %v", oldTitle)
 				}
-				oldTitle = "<h2>Previous " + oldTitle + "</h2>"
+				oldTitle = "<h1>Previous " + oldTitle + "</h1>"
 				last = oldTitle + resV1[i+1].Find("div", "class", "article-full-content").HTML()
 			}
 			break
