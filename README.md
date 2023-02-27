@@ -9,13 +9,13 @@
 
 [![Star History Chart](https://api.star-history.com/svg?repos=XRSec/AWVS-Update&type=Date)](https://star-history.com/#XRSec/AWVS-Update&Date)
 
-## 15.4
+## Latest 15.4
 
-## New features
+### New features
 
 - Improved the [default roles](https://www.acunetix.com/support/docs/overview-of-users-and-roles-in-acunetix/#h.dfr9nk27a72e).
 
-## New security checks
+### New security checks
 
 - Updated the WordPress plugin vulnerabilities.
 - Updated the software composition analysis database.
@@ -28,7 +28,7 @@
 - New security check detecting retired hash functions usage in SAML.
 - Improved the SQL injection check to identify whether the database user has admin privileges.
 
-## Improvements
+### Improvements
 
 - Added the Heuristic server-side routing detection to optimize attacks.
 - Updated the embedded Chromium browser to v109.0.5414.119.
@@ -39,7 +39,7 @@
 - Improved the scanner engine to reduce the memory footprint.
 - Improved the .NET IAST sensor to mask any password.
 
-## Fixes
+### Fixes
 
 - Fixed the pagination bug on the Targets page.
 - Fixed the crawler issue that the page becomes unresponsive when it contains many elements.
@@ -82,7 +82,7 @@ PassWord: Awvs@awvs.lan
 
 ## Previous 15.3.1
 
-## Fixes
+### Fixes
 
 - Fixed the Linux installations for updating issues.
 
