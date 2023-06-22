@@ -7,9 +7,9 @@ docker run -it -d \
 --name awvs \
 -p 3443:3443 \
 --restart=always \
-xrsec/awvs
-# example xrsec/awvs:{{tags}} # https://hub.docker.com/r/xrsec/awvs/tags
-# xrsec/awvs:v15.1
+ghcr.io/xrsec/awvs
+# example ghcr.io/xrsec/awvs:{{tags}} # https://github.com/XRSec/AWVS-Update/pkgs/container/awvs
+# ghcr.io/xrsec/awvs:v15.1
 ```
 
 ### Edit HOSTS
