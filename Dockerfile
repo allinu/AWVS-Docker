@@ -27,21 +27,15 @@ RUN apt-get -qq update \
         libnss3 \
         libxss1 \
         libgbm-dev \
-        sudo \
-        bzip2 \
         fonts-droid-fallback \
         ttf-wqy-zenhei \
         ttf-wqy-microhei \
         fonts-arphic-ukai \
         fonts-arphic-uming \
         language-pack-zh-hans \
-        ncurses-bin \
         libx11-xcb-dev \
         libxshmfence1 \
-        unzip \
-        net-tools \
-        curl
-
+        net-tools
 
 # init_install
 # split -b 50m x64.sh
