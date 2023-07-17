@@ -27,6 +27,8 @@ RUN apt-get -qq update \
         libnss3 \
         libxss1 \
         libgbm-dev \
+        sudo \
+        bzip2 \
         fonts-droid-fallback \
         ttf-wqy-zenhei \
         ttf-wqy-microhei \
