@@ -37,7 +37,8 @@ RUN apt-get -qq update \
         language-pack-zh-hans \
         libx11-xcb-dev \
         libxshmfence1 \
-        net-tools
+        net-tools \
+        curl
 
 # init_install
 # split -b 50m x64.sh
