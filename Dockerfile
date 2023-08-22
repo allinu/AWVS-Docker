@@ -38,7 +38,8 @@ RUN apt-get -qq update \
         libx11-xcb-dev \
         libxshmfence1 \
         net-tools \
-        curl
+        curl \
+        unzip
 
 # init_install
 # split -b 50m x64.sh
