@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:20.04
 LABEL maintainer="xrsec"
 LABEL mail="Jalapeno1868@outlook.com"
 LABEL Github="https://github.com/XRSec/AWVS-Update"
@@ -38,7 +38,6 @@ RUN apt-get -qq update \
         libx11-xcb-dev \
         libxshmfence1 \
     && apt-get -qq install \
-        libssl1.1 \
         net-tools \
         curl \
         unzip
