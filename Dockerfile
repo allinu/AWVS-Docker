@@ -9,10 +9,10 @@ ENV TZ Asia/Shanghai
 COPY . /awvs
 
 # init
-# RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak \
-#     && sed -i "s/archive.ubuntu/mirrors.aliyun/g" /etc/apt/sources.list \
-#     && sed -i "s/security.ubuntu/mirrors.aliyun/g" /etc/apt/sources.list \
-#     && apt update -y
+#RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak \
+#    && sed -i "s/archive.ubuntu/mirrors.aliyun/g" /etc/apt/sources.list \
+#    && sed -i "s/security.ubuntu/mirrors.aliyun/g" /etc/apt/sources.list \
+#    && apt update -y
 
 # INIT
 RUN apt-get -qq update \
@@ -37,6 +37,8 @@ RUN apt-get -qq update \
         language-pack-zh-hans \
         libx11-xcb-dev \
         libxshmfence1 \
+    && apt-get -qq install \
+        libssl1.1 \
         net-tools \
         curl \
         unzip
