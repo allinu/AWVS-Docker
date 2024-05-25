@@ -24,6 +24,4 @@ echo -e "\033[1;33m  [ https://awvs.lan:3443/ ] \033[0m"
 ifconfig -a | grep inet | grep -v inet6 | awk '{print $2}' | tr -d "addr:" | awk '{print "\033[1;33m  [ https://" $1 ":3443 ] \033[0m"}'
 echo -e "\033[1;33m  [ https://$(curl -s -m 10 myip.ipip.net | cut -d " " -f 2 | tr -d "IP："):3443 ] \n\033[0m"
 
-cat /awvs/.hosts >> /etc/hosts
-grep acunetix /etc/hosts
-su -l acunetix -c /home/acunetix/.acunetix/start.sh
+exec /bin/su acunetix -c "/home/acunetix/.acunetix/supervisor svc run"

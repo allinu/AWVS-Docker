@@ -47,6 +47,8 @@
 
 ## Use
 
+<font color=red><h3>**请勿使用阿里云源**, 否则无法拉取最新版本, 推荐上海交大源</h3></font>
+
 ```bash
 docker run -it -d \
 --name awvs \
@@ -61,7 +63,7 @@ xrsec/awvs
 
 ```bash
 sudo vi /etc/hosts
-192.168.0.1 awvs.lan
+192.168.0.108 awvs.lan
 ```
 
 ### RootCA 「must」

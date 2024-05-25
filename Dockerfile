@@ -55,7 +55,7 @@ RUN cat /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/xa* > /awvs/acunetix/AWVS_INSTA
     && sed -i "s/read -sp '    Password: ' master_password/master_password='Awvs@awvs.lan'/g" /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
     && sed -i "s/read -sp '    Password again: ' master_password2/master_password2='Awvs@awvs.lan'/g" /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
     && sed -i "s/systemctl/echo/g"  /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
-    # && sed -i "s/uname -a | grep --quiet x86_64/uname -a | grep --quiet aarch64/g"  /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \ # TODO ARM64
+    # sed -i "s/x86_64/aarch64/g"  /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh  # TODO ARM64
     && /bin/bash /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
     && mv /awvs/acunetix/CERTS/ca.key /home/acunetix/.acunetix/data/certs/ \
     && mv /awvs/acunetix/CERTS/ca.cer /home/acunetix/.acunetix/data/certs/ \
@@ -65,7 +65,6 @@ RUN cat /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/xa* > /awvs/acunetix/AWVS_INSTA
     && cp /awvs/acunetix/README/LAST_VERSION /LAST_VERSION \
     && rm -rf /awvs \
     && mkdir /awvs \
-    && echo "" > /awvs/.hosts \
     && mv /awvs.sh /awvs/awvs.sh \
     && mv /LAST_VERSION /awvs/LAST_VERSION \
     && chmod 777 /awvs/awvs.sh \
