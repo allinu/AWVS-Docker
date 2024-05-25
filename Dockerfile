@@ -11,6 +11,7 @@ COPY . /awvs
 # init
 #RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak \
 #    && sed -i "s/archive.ubuntu/mirrors.aliyun/g" /etc/apt/sources.list \
+#    && sed -i "s/ports.ubuntu/mirrors.aliyun/g" /etc/apt/sources.list \
 #    && sed -i "s/security.ubuntu/mirrors.aliyun/g" /etc/apt/sources.list \
 #    && apt update -y
 
@@ -37,7 +38,6 @@ RUN apt-get -qq update \
         language-pack-zh-hans \
         libx11-xcb-dev \
         libxshmfence1 \
-    && apt-get -qq install \
         net-tools \
         curl \
         unzip
@@ -51,11 +51,11 @@ RUN cat /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/xa* > /awvs/acunetix/AWVS_INSTA
     && sed -i "s/read -r ans/ans=yes/g" /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
     && sed -i "s/read -p \"    Hostname \[\$host_name\]:\" hn/hn=awvs.lan/g" /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
     && sed -i "s/host_name=\$(hostname)/host_name=awvs.lan/g" /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
-    && sed -i "s/read -p \"    Hostname \[\$host_name\]:\" hn/awvs.lan/g" /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
-    && sed -i "s/read -p '    Email: ' master_user/master_user=awvs@awvs.lan/g" /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
-    && sed -i "s/read -sp '    Password: ' master_password/master_password=Awvs@awvs.lan/g" /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
-    && sed -i "s/read -sp '    Password again: ' master_password2/master_password2=Awvs@awvs.lan/g" /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
-    && sed -i "s/systemctl/\# systemctl/g"  /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
+    && sed -i "s/read -p '    Email: ' master_user/master_user='awvs@awvs.lan'/g" /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
+    && sed -i "s/read -sp '    Password: ' master_password/master_password='Awvs@awvs.lan'/g" /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
+    && sed -i "s/read -sp '    Password again: ' master_password2/master_password2='Awvs@awvs.lan'/g" /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
+    && sed -i "s/systemctl/echo/g"  /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
+    # && sed -i "s/uname -a | grep --quiet x86_64/uname -a | grep --quiet aarch64/g"  /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \ # TODO ARM64
     && /bin/bash /awvs/acunetix/AWVS_INSTALLATION_PACKAGE/awvs_x86.sh \
     && mv /awvs/acunetix/CERTS/ca.key /home/acunetix/.acunetix/data/certs/ \
     && mv /awvs/acunetix/CERTS/ca.cer /home/acunetix/.acunetix/data/certs/ \

@@ -44,13 +44,13 @@ func main() {
 	// read head
 	head := strings.Replace(readFile("README_HEAD"), "LatestVersion", *packageVersion, -1)
 
-	latest = htmltomd.Convert(latest, "", false)
+	latest = htmltomd.Convert(latest, "")
 
 	latest = strings.ReplaceAll(latest, "# ", "## ")
 
 	use := readFile("README_USE")
 
-	last = htmltomd.Convert(last, "", false)
+	last = htmltomd.Convert(last, "")
 
 	last = strings.ReplaceAll(last, "# ", "## ")
 
