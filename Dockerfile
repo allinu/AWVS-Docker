@@ -38,6 +38,7 @@ RUN apt-get -qq update \
         language-pack-zh-hans \
         libx11-xcb-dev \
         libxshmfence1 \
+        libsqlite3-dev \
         net-tools \
         curl \
         unzip
