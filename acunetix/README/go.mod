@@ -1,6 +1,6 @@
 module readme
 
-go 1.18
+go 1.23.0
 
 require (
 	github.com/XRSec/HTML-TO-MARKDOWN v0.0.0-20230227195938-3256eea262d2
