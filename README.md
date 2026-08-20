@@ -7,7 +7,7 @@
 - 本仓库及相关资源仅供个人测试，请勿用于非法用途
 - This warehouse and related resources are for personal testing only, please do not use them for illegal purposes
 
-[![Star History Chart](https://api.star-history.com/svg?repos=XRSec/AWVS-Update&type=Date)](https://star-history.com/#XRSec/AWVS-Update&Date)
+![Star History Chart](https://api.star-history.com/chart?repos=XRSec/AWVS-Update&type=date&legend=top-left&sealed_token=kIaHaFVvFo_hM75jBVy5C9TYn0HSrXWrSdzgNs83LhzStvB-fWhrv7oQfHcDA1bMStvsxm7g1EEYHbwO1fx8QSZ-kLYjxzgx-giEdFykKfOlknS7lfEwxw)
 
 ## Latest 24.4.240427095
 
